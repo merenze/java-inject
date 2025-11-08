@@ -13,6 +13,15 @@
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub merenze Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/merenze/java-inject</url>
+        </repository>
+    </distributionManagement>
+
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
