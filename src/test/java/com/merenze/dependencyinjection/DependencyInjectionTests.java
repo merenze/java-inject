@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.merenze.dependencyinjection.ServiceBuilder;
+import com.merenze.dependencyinjection.stubs.*;
 
 import java.util.Optional;
 
@@ -17,59 +17,9 @@ class ServiceBuilderConstructorTests {
         builder = new ServiceBuilder();
     }
 
-    static class Gadget {
-        Gizmo gizmo;
-        Whodad whodad;
-
-        Gadget(Gizmo gizmo) {
-            this(gizmo, null);
-        }
-
-        Gadget(Gizmo gizmo, Whodad whodad) {
-            this.gizmo = gizmo;
-            this.whodad = whodad;
-        }
-    }
-
-    static class Gizmo {
-        Optional<Whatsit> whatsit;
-
-        Gizmo(Optional<Whatsit> whatsit) {
-            this.whatsit = whatsit;
-        }
-
-        Gizmo() {
-            this.whatsit = Optional.empty();
-        }
-    }
-
-    static class Whodad {
-        Thingamabob thingamabob;
-
-        Whodad(Thingamabob thingamabob) {
-            this.thingamabob = thingamabob;
-        }
-
-        Whodad() {
-            this.thingamabob = null;
-        }
-    }
-
-    static class Whatsit {
-        Gadget gadget;
-
-        Whatsit(Gadget gadget) {
-            this.gadget = gadget;
-        }
-
-        Whatsit() {
-        }
-    }
-
     static class Thingamabob {
     }
 
-    // --- Tests ---
 
     @Test
     void testConstructorOrdering() {
