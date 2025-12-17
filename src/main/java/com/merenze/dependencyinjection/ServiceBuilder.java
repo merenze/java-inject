@@ -1,11 +1,8 @@
 package com.merenze.dependencyinjection;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +10,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class ServiceBuilder {
-    private final Map<Class<?>, Function<ServiceProvider, ?>> factories = new HashMap<>();
+    private final Map<Class<?>, List<Function<ServiceProvider, ?>>> factories = new HashMap<>();
 
     public <T> ServiceBuilder addSingleton(Class<T> type) {
         return addSingleton(type, type);
@@ -28,8 +25,8 @@ public class ServiceBuilder {
         var constructors = type.getConstructors();
 
         var orderedConstructors = Arrays.stream(constructors)
-            .sorted((c1, c2) -> Integer.compare(c1.getParameterCount(), c2.getParameterCount()))
-            .toList();
+                .sorted((c1, c2) -> Integer.compare(c1.getParameterCount(), c2.getParameterCount()))
+                .toList();
 
         for (var constructor : orderedConstructors) {
             List<Object> arguments = new ArrayList<>();
@@ -42,8 +39,8 @@ public class ServiceBuilder {
 
                 if (isOptional) {
                     typeToResolve = parameter.getParameterizedType() instanceof ParameterizedType parameterizedType
-                        ? (Class<?>) parameterizedType.getActualTypeArguments()[0]
-                        : Object.class;
+                            ? (Class<?>) parameterizedType.getActualTypeArguments()[0]
+                            : Object.class;
                 }
 
                 var argument = provider.getService(typeToResolve);
@@ -74,7 +71,7 @@ public class ServiceBuilder {
     }
 
     public <T> ServiceBuilder addSingletonFactory(Class<T> type, Function<ServiceProvider, T> factory) {
-        factories.put(type, factory);
+        factories.computeIfAbsent(type, k -> new ArrayList<>()).add(factory);
         return this;
     }
 
@@ -83,12 +80,19 @@ public class ServiceBuilder {
     }
 
     public ServiceProvider build(boolean eager) {
-        var provider = new ServiceProvider(new HashMap<>(factories));
+        Map<Class<?>, List<Function<ServiceProvider, ?>>> factories = new HashMap<>();
+        for (var entry : factories.entrySet()) {
+            factories.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+
+        var provider = new ServiceProvider(factories);
+
         if (eager) {
             for (var type : factories.keySet()) {
                 provider.getService(type);
             }
         }
+
         return provider;
     }
 }
