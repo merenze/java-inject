@@ -5,22 +5,40 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.merenze.dependencyinjection</groupId>
-    <artifactId>javainject</artifactId>
+    <artifactId>java-inject</artifactId>
     <version>1.0.0</version>
+
+    <name>Java Inject</name>
+    <description>Lightweight Java DI library</description>
+    <url>https://github.com/merenze/java-inject</url>
+
+    <scm>
+        <url>https://github.com/merenze/java-inject</url>
+        <connection>scm:git:https://github.com/merenze/java-inject.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:merenze/java-inject.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>merenze</id>
+            <name>Matthew Renze</name>
+            <url>https://github.com/merenze</url>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://mit-license.org/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub merenze Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/merenze/java-inject</url>
-        </repository>
-    </distributionManagement>
-
 
     <dependencies>
         <dependency>
@@ -30,5 +48,62 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                    <id>attach-sources</id>
+                    <goals>
+                        <goal>jar-no-fork</goal>
+                    </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <executions>
+                    <execution>
+                    <id>attach-javadocs</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                    <id>sign-artifacts</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>sign</goal>
+                    </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
