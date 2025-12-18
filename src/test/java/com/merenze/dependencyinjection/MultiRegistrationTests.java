@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import com.merenze.dependencyinjection.stubs.*;
 
 import java.util.List;
-import java.util.Optional;
 
 class MultiRegistrationTests {
 
@@ -28,17 +27,21 @@ class MultiRegistrationTests {
 
     @Test
     void testGetServicesReturnsAllRegisteredInstancesInOrder() {
-        builder.addSingleton(Gadget.class, new Gadget(new Gizmo()))
-                .addSingleton(Gadget.class, new Gadget(new Gizmo()))
-                .addSingleton(Gadget.class, new Gadget(new Gizmo()));
+        var gadgets = List.of(new Gadget(new Gizmo()), new Gadget(new Gizmo()), new Gadget(new Gizmo()));
+
+        gadgets.forEach(gadget -> builder.addSingleton(Gadget.class, gadget));
 
         var provider = builder.build();
 
-        List<Gadget> gadgets = provider.getServices(Gadget.class);
-        Assertions.assertEquals(3, gadgets.size(), "Expected three registered services");
-        Assertions.assertNotNull(gadgets.get(0).gizmo);
-        Assertions.assertNotNull(gadgets.get(1).gizmo);
-        Assertions.assertNotNull(gadgets.get(2).gizmo);
+        var result = provider.getServices(Gadget.class);
+
+        Assertions.assertEquals(gadgets.size(), result.size());
+
+        for (var i = 0; i < gadgets.size(); i++) {
+            Assertions.assertSame(gadgets.get(i), result.get(i));
+        }
+
+        Assertions.assertSame(gadgets.get(gadgets.size() - 1), provider.getRequiredService(Gadget.class));
     }
 
     @Test

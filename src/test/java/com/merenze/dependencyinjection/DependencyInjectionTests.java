@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import com.merenze.dependencyinjection.stubs.*;
 
-import java.util.Optional;
-
 class ServiceBuilderConstructorTests {
 
     private ServiceBuilder builder;
