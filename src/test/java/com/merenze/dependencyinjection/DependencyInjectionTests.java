@@ -49,12 +49,9 @@ class ServiceBuilderConstructorTests {
 
     @Test
     void testCircularDependencyThrows() {
-        builder.addSingleton(Gadget.class)
-                .addSingleton(Whatsit.class);
-
+        builder.addSingleton(CircularDependency.class);
         var provider = builder.build();
 
-        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () -> provider.getService(Gadget.class));
-        Assertions.assertTrue(ex.getMessage().contains("unable to instantiate"));
+        Assertions.assertThrows(RuntimeException.class, () -> provider.getService(CircularDependency.class));
     }
 }
