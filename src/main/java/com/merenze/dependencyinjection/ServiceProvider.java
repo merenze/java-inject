@@ -57,7 +57,7 @@ public class ServiceProvider {
      *                  a singleton instance. If a type has multiple factories,
      *                  all will be invoked in registration order.
      */
-    public ServiceProvider(Map<Class<?>, List<Function<ServiceProvider, ?>>> factories) {
+    protected ServiceProvider(Map<Class<?>, List<Function<ServiceProvider, ?>>> factories) {
         this.factories = factories;
         // register the provider itself as a singleton
         this.factories.put(ServiceProvider.class, List.of(p -> p));
