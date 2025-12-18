@@ -1,8 +1,10 @@
 package com.merenze.dependencyinjection;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class ServiceBuilder {
      * </p>
      *
      * <p>
-     * Constructor-based resolution is used: the constructor with the fewest
+     * Constructor-based resolution is used: the constructor with the most
      * resolvable parameters is preferred. Only public constructors whose
      * parameters can be satisfied by the {@link ServiceProvider} will be used.
      * </p>
@@ -82,7 +84,7 @@ public class ServiceBuilder {
         var constructors = type.getConstructors();
 
         var orderedConstructors = Arrays.stream(constructors)
-                .sorted((c1, c2) -> Integer.compare(c1.getParameterCount(), c2.getParameterCount()))
+                .sorted(Comparator.comparing((Constructor<?> c) -> c.getParameterCount()).reversed())
                 .toList();
 
         for (var constructor : orderedConstructors) {
@@ -203,7 +205,6 @@ public class ServiceBuilder {
      * @return a new {@link ServiceProvider} backed by the current registrations
      */
     public ServiceProvider build(boolean eager) {
-        Map<Class<?>, List<Function<ServiceProvider, ?>>> factories = new HashMap<>();
         for (var entry : factories.entrySet()) {
             factories.put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
