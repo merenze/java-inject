@@ -22,13 +22,13 @@ class ServiceBuilderConstructorTests {
     @Test
     void testConstructorOrdering() {
         builder.addSingleton(Thingamabob.class)
-                .addSingleton(Whodad.class)
+                .addSingleton(Whodad_ThingamabobClient.class)
                 .addSingleton(Gizmo.class)
-                .addSingleton(Gadget.class);
+                .addSingleton(Gadget_GizmoAndWhodadClient.class);
 
         var provider = builder.build();
 
-        var gadget = provider.getService(Gadget.class);
+        var gadget = provider.getService(Gadget_GizmoAndWhodadClient.class);
         Assertions.assertNotNull(gadget);
         Assertions.assertNotNull(gadget.gizmo);
         Assertions.assertNotNull(gadget.whodad);
